@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.training.library_management.dtos.BookDto;
 import org.training.library_management.exceptions.BookNotFoundException;
+import org.training.library_management.exceptions.EmptyListException;
 import org.training.library_management.model.Book;
 import org.training.library_management.repositories.BookRepo;
 import org.training.library_management.services.BookService;
@@ -103,7 +104,12 @@ public class BookServiceImplement implements BookService {
      */
     @Override
     public List<BookDto> searchBooksByKey(String key) {
-        return this.bookRepo.findByNameContaining(key).stream().map(e -> mapper.map(e, BookDto.class)).toList();
+        var listOfBooks = this.bookRepo.findByNameContaining(key).stream().map(e -> mapper.map(e, BookDto.class))
+                .toList();
+        if (!listOfBooks.isEmpty())
+            return listOfBooks;
+        else
+            throw new EmptyListException();
     }
 
 }
