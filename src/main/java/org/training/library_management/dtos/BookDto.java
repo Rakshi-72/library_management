@@ -3,8 +3,6 @@ package org.training.library_management.dtos;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import org.training.library_management.model.Librarian;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

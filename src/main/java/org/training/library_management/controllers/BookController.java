@@ -20,6 +20,8 @@ import org.training.library_management.config.ApiResponse;
 import org.training.library_management.dtos.BookDto;
 import org.training.library_management.services.BookService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/api/book")
 public class BookController {
@@ -32,10 +34,11 @@ public class BookController {
      * service layer, and
      * returns the result of that function as a response
      * 
-     * @param dto The object that will be sent to the server.
-     * @return A ResponseEntity object is being returned.
+     * @param dto BookDto object
+     * @return A ResponseEntity object with a BookDto object as a parameter.
      */
     @PostMapping("/add")
+    @ApiOperation(value = "add book to library", notes = "It takes a BookDto object as a parameter, calls the addBook function in the service layer, and returns the result of that function as a response", response = BookDto.class)
     public ResponseEntity<BookDto> addBook(@Valid @RequestBody BookDto dto) {
         return new ResponseEntity<>(this.service.addBook(dto), HttpStatus.CREATED);
     }
