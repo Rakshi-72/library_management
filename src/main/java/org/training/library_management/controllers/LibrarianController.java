@@ -22,6 +22,8 @@ import org.training.library_management.dtos.LibrarianDtoRequest;
 import org.training.library_management.dtos.LibrarianDtoResponse;
 import org.training.library_management.services.LibrarianService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/api/librarian")
 public class LibrarianController {
@@ -36,6 +38,7 @@ public class LibrarianController {
      * @return A ResponseEntity object is being returned.
      */
     @PostMapping("/add")
+    @ApiOperation(value = "create a Librarian", notes = "It takes a LibrarianDtoRequest object, validates it, and then passes it to the service layer", response = LibrarianDtoResponse.class)
     public ResponseEntity<LibrarianDtoResponse> addLibrarian(@Valid @RequestBody LibrarianDtoRequest request) {
         return new ResponseEntity<>(service.createLibrarian(request), HttpStatus.CREATED);
     }
@@ -49,6 +52,7 @@ public class LibrarianController {
      * @return A bookDtoSimple object
      */
     @GetMapping("/{lId}/barrow/{bookId}")
+    @ApiOperation(value = "barrow book from library ", notes = "This function takes a library id and a book id and returns a book dto simple. this controller helps to barrow book from the database", response = BookDtoSimple.class)
     public ResponseEntity<BookDtoSimple> barrowBook(@PathVariable Integer lId, @PathVariable Integer bookId) {
         return ResponseEntity.ok(service.barrowBook(lId, bookId));
     }
@@ -62,6 +66,7 @@ public class LibrarianController {
      * @return A bookDto object
      */
     @GetMapping("/{lId}/return/{bookId}")
+    @ApiOperation(value = "return book to library ", notes = "It takes a library id and a book id, and returns a book. this controller helps to return books to database", response = BookDto.class)
     public ResponseEntity<BookDto> returnBook(@PathVariable Integer lId, @PathVariable Integer bookId) {
         return ResponseEntity.ok(service.returnBook(lId, bookId));
     }
@@ -72,6 +77,7 @@ public class LibrarianController {
      * @return A list of LibrarianDtoResponse objects.
      */
     @GetMapping("/all")
+    @ApiOperation(value = "get all librarians ", notes = "It returns a list of all librarians in the database", response = LibrarianDtoResponse.class)
     public ResponseEntity<List<LibrarianDtoResponse>> getAllLibrarians() {
         return new ResponseEntity<>(service.getAllLibrarians(), HttpStatus.OK);
     }
@@ -84,6 +90,7 @@ public class LibrarianController {
      * @return A ResponseEntity object is being returned.
      */
     @GetMapping("/{librarianId}")
+    @ApiOperation(value = "get librarian ", notes = "It takes a librarianId as a path variable, and returns a LibrarianDtoResponse object", response = LibrarianDtoResponse.class)
     public ResponseEntity<LibrarianDtoResponse> getLibrarianById(@PathVariable Integer librarianId) {
         return new ResponseEntity<>(this.service.getLibrarianById(librarianId), HttpStatus.OK);
     }
@@ -95,6 +102,7 @@ public class LibrarianController {
      * @return A ResponseEntity object is being returned.
      */
     @DeleteMapping("/delete/{id}")
+    @ApiOperation(value = "delete librarian ", notes = "It deletes a librarian from the database", response = ApiResponse.class)
     public ResponseEntity<ApiResponse> deleteLibrarian(@PathVariable Integer id) {
         this.service.deleteLibrarian(id);
         return new ResponseEntity<>(new ApiResponse(
@@ -112,6 +120,7 @@ public class LibrarianController {
      *         of ACCEPTED.
      */
     @PutMapping("/update/{id}")
+    @ApiOperation(value = "update librarian ", notes = "It takes an id and a request body, validates the request body, and then returns a response entity with the updated librarian", response = LibrarianDtoResponse.class)
     public ResponseEntity<LibrarianDtoResponse> updateLibrarian(@PathVariable Integer id,
             @Valid @RequestBody LibrarianDtoRequest request) {
         return new ResponseEntity<>(this.service.updateLibrarian(id, request), HttpStatus.ACCEPTED);
@@ -124,6 +133,7 @@ public class LibrarianController {
      * @return A list of books that have been borrowed by a librarian.
      */
     @GetMapping("/{librarianId}/books")
+    @ApiOperation(value = "get librarian borrowed books", notes = "It returns a list of books that have been borrowed by a librarian", response = BookDto.class)
     public ResponseEntity<List<BookDto>> getAllBooksBorrowedByLibrarian(@PathVariable Integer librarianId) {
 
         return new ResponseEntity<>(this.service.getBorrowedBooks(librarianId), HttpStatus.OK);

@@ -50,6 +50,7 @@ public class BookController {
      * @return A ResponseEntity object is being returned.
      */
     @DeleteMapping("/delete/{id}")
+    @ApiOperation(value = "delete book from the library", notes = "It deletes a book from the database", response = ApiResponse.class)
     public ResponseEntity<ApiResponse> deleteBook(@PathVariable Integer id) {
         this.service.deleteBook(id);
         return new ResponseEntity<>(new ApiResponse("book deleted", true), HttpStatus.OK);
@@ -61,6 +62,7 @@ public class BookController {
      * @return A list of BookDto objects
      */
     @GetMapping("/all")
+    @ApiOperation(value = "return all books", notes = "This function returns a list of all books in the database")
     public ResponseEntity<List<BookDto>> getAllBooks() {
         return new ResponseEntity<>(this.service.getAllBooks(), HttpStatus.OK);
     }
@@ -75,6 +77,7 @@ public class BookController {
      *         status.
      */
     @GetMapping("/{id}")
+    @ApiOperation(value = "return a book", notes = "It returns a ResponseEntity of type BookDto, which is a DTO (Data Transfer Object) that contains the data of a book", response = BookDto.class)
     public ResponseEntity<BookDto> getBook(@PathVariable Integer id) {
         return new ResponseEntity<>(this.service.getBookById(id), HttpStatus.OK);
     }
@@ -87,6 +90,7 @@ public class BookController {
      * @return A ResponseEntity with a BookDto and a HttpStatus.CREATED
      */
     @PutMapping("/update/{id}")
+    @ApiOperation(value = "update a book", notes = "It takes an id and a bookDto, and returns an updated bookDto", response = BookDto.class)
     public ResponseEntity<BookDto> updateBook(@PathVariable Integer id, @Valid @RequestBody BookDto dto) {
         return new ResponseEntity<>(this.service.updateBook(id, dto), HttpStatus.CREATED);
     }
@@ -98,11 +102,19 @@ public class BookController {
      * @return A list of BookDto objects
      */
     @GetMapping("/search")
+    @ApiOperation(value = "search a book", notes = "It takes a string as a parameter, and returns a list of BookDto objects")
     public ResponseEntity<List<BookDto>> searchBook(@RequestParam(value = "key") String key) {
         return new ResponseEntity<>(this.service.searchBooksByKey(key), HttpStatus.OK);
     }
 
+    /**
+     * It takes a string as a parameter, and returns a list of available
+     * (unassigned) BookDto objects
+     * 
+     * @return A list of BookDto objects
+     */
     @GetMapping("/available")
+    @ApiOperation(value = "get available books", notes = "It takes a string as a parameter, and returns a list of available (unassigned) BookDto objects")
     public ResponseEntity<List<BookDto>> getAllAvailableBooks() {
         return new ResponseEntity<>(this.service.getAvailableBooks(), HttpStatus.OK);
     }
