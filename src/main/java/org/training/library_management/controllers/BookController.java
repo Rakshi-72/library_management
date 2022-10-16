@@ -73,7 +73,7 @@ public class BookController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<BookDto> getBook(@PathVariable Integer id) {
-        return new ResponseEntity<>(this.service.getBookById(id), HttpStatus.FOUND);
+        return new ResponseEntity<>(this.service.getBookById(id), HttpStatus.OK);
     }
 
     /**
@@ -97,6 +97,11 @@ public class BookController {
     @GetMapping("/search")
     public ResponseEntity<List<BookDto>> searchBook(@RequestParam(value = "key") String key) {
         return new ResponseEntity<>(this.service.searchBooksByKey(key), HttpStatus.OK);
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<BookDto>> getAllAvailableBooks() {
+        return new ResponseEntity<>(this.service.getAvailableBooks(), HttpStatus.OK);
     }
 
 }

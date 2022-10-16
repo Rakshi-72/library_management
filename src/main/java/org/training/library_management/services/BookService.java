@@ -17,4 +17,6 @@ public interface BookService {
 
     List<BookDto> searchBooksByKey(String key);
 
+    List<BookDto> getAvailableBooks();
+
 }

@@ -85,7 +85,7 @@ public class LibrarianController {
      */
     @GetMapping("/{librarianId}")
     public ResponseEntity<LibrarianDtoResponse> getLibrarianById(@PathVariable Integer librarianId) {
-        return new ResponseEntity<>(this.service.getLibrarianById(librarianId), HttpStatus.FOUND);
+        return new ResponseEntity<>(this.service.getLibrarianById(librarianId), HttpStatus.OK);
     }
 
     /**

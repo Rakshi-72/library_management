@@ -2,6 +2,7 @@ package org.training.library_management.services.implement;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,8 @@ public class BookServiceImplement implements BookService {
      */
     @Override
     public List<BookDto> getAllBooks() {
-        return this.bookRepo.findAll().stream().map(book -> mapper.map(book, BookDto.class)).collect(Collectors.toList());
+        return this.bookRepo.findAll().stream().map(book -> mapper.map(book, BookDto.class))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -110,6 +112,25 @@ public class BookServiceImplement implements BookService {
             return listOfBooks;
         else
             throw new EmptyListException();
+    }
+
+    /**
+     * It returns a list of books that are available for borrowing
+     * 
+     * @return A list of BookDto objects.
+     */
+    @Override
+    public List<BookDto> getAvailableBooks() {
+        List<Book> availableBooks = this.bookRepo.findAll()
+                .stream().filter(book -> book.getLibrarian() == null).toList();
+
+        if (availableBooks.isEmpty())
+            throw new EmptyListException();
+
+        List<BookDto> books = availableBooks.stream()
+                .map(book -> mapper.map(book, BookDto.class)).toList();
+
+        return books;
     }
 
 }
