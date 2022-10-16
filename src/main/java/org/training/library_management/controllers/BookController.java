@@ -37,7 +37,7 @@ public class BookController {
      */
     @PostMapping("/add")
     public ResponseEntity<BookDto> addBook(@Valid @RequestBody BookDto dto) {
-        return new ResponseEntity<BookDto>(this.service.addBook(dto), HttpStatus.CREATED);
+        return new ResponseEntity<>(this.service.addBook(dto), HttpStatus.CREATED);
     }
 
     /**
@@ -49,7 +49,7 @@ public class BookController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse> deleteBook(@PathVariable Integer id) {
         this.service.deleteBook(id);
-        return new ResponseEntity<ApiResponse>(new ApiResponse("book deleted", true), HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse("book deleted", true), HttpStatus.OK);
     }
 
     /**
@@ -73,11 +73,11 @@ public class BookController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<BookDto> getBook(@PathVariable Integer id) {
-        return new ResponseEntity<BookDto>(this.service.getBookById(id), HttpStatus.FOUND);
+        return new ResponseEntity<>(this.service.getBookById(id), HttpStatus.FOUND);
     }
 
     /**
-     * It takes an id and a bookDto, and returns a updated bookDto
+     * It takes an id and a bookDto, and returns an updated bookDto
      * 
      * @param id  The id of the book to be updated
      * @param dto This is the object that will be used to update the book.
@@ -85,7 +85,7 @@ public class BookController {
      */
     @PutMapping("/update/{id}")
     public ResponseEntity<BookDto> updateBook(@PathVariable Integer id, @Valid @RequestBody BookDto dto) {
-        return new ResponseEntity<BookDto>(this.service.updateBook(id, dto), HttpStatus.CREATED);
+        return new ResponseEntity<>(this.service.updateBook(id, dto), HttpStatus.CREATED);
     }
 
     /**

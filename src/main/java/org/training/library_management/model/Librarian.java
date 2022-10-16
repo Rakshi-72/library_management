@@ -1,25 +1,16 @@
 package org.training.library_management.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString
 public class Librarian {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +20,6 @@ public class Librarian {
     private String gender;
     private String email;
     private String password;
-    @OneToMany(mappedBy = "librarian", cascade = CascadeType.ALL)
-    private List<Book> booksBorrowed = new ArrayList<>();
+    @OneToMany(mappedBy = "librarian", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Book> booksBorrowed;
 }

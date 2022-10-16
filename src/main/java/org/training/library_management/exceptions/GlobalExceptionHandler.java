@@ -59,4 +59,73 @@ public class GlobalExceptionHandler {
         props.setProperty("message", exception.getMessage());
         return new ResponseEntity<>(props, HttpStatus.BAD_REQUEST);
     }
+
+    /**
+     * It takes an exception, creates a new Properties object, sets the message
+     * property to the
+     * exception's message, and returns a new ResponseEntity with the Properties
+     * object and a 404
+     * status code
+     * 
+     * @param exception The exception object that was thrown.
+     * @return A ResponseEntity object is being returned.
+     */
+    @ExceptionHandler(LibrarianNotFoundException.class)
+    public ResponseEntity<Properties> handleLibrarianNotFoundException(LibrarianNotFoundException exception) {
+        Properties props = new Properties();
+        props.setProperty("message", exception.getMessage());
+        return new ResponseEntity<>(props, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * It takes an exception, creates a new Properties object, sets the message
+     * property to the
+     * exception's message, and returns a new ResponseEntity with the Properties
+     * object and a
+     * HttpStatus.BAD_REQUEST
+     * 
+     * @param exception The exception object that was thrown.
+     * @return A ResponseEntity object is being returned.
+     */
+    @ExceptionHandler(UserDoestHaveParticularBookException.class)
+    public ResponseEntity<Properties> handleParticularBookDoestHaveException(
+            UserDoestHaveParticularBookException exception) {
+        Properties props = new Properties();
+        props.setProperty("message", exception.getMessage());
+        return new ResponseEntity<>(props, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * It takes an exception, creates a new Properties object, sets the message
+     * property to the
+     * exception's message, and returns a new ResponseEntity with the Properties
+     * object and a
+     * BAD_REQUEST status
+     * 
+     * @param exception The exception object that was thrown.
+     * @return A ResponseEntity object is being returned.
+     */
+    @ExceptionHandler(BookAlreadyBorrowedBySomeOneException.class)
+    public ResponseEntity<Properties> handleBookBorrow(BookAlreadyBorrowedBySomeOneException exception) {
+        Properties props = new Properties();
+        props.setProperty("message", exception.getMessage());
+        return new ResponseEntity<>(props, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * It takes an exception, creates a new Properties object, sets the message
+     * property to the
+     * exception's message, and returns a new ResponseEntity with the Properties
+     * object and a
+     * BAD_REQUEST status
+     * 
+     * @param exception The exception object that was thrown.
+     * @return A ResponseEntity object is being returned.
+     */
+    @ExceptionHandler(NoBookBorrowedYetException.class)
+    public ResponseEntity<Properties> handleBookBorrow(NoBookBorrowedYetException exception) {
+        Properties props = new Properties();
+        props.setProperty("message", exception.getMessage());
+        return new ResponseEntity<>(props, HttpStatus.BAD_REQUEST);
+    }
 }

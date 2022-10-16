@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.training.library_management.model.Book;
+import org.training.library_management.model.Librarian;
 
 public interface BookRepo extends JpaRepository<Book, Integer> {
     /**
@@ -13,4 +14,6 @@ public interface BookRepo extends JpaRepository<Book, Integer> {
      * @return A list of books that contain the search_key in their name.
      */
     List<Book> findByNameContaining(String search_key);
+
+    List<Book> findByLibrarian(Librarian librarian);
 }

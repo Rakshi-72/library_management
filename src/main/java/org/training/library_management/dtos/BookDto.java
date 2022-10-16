@@ -25,5 +25,4 @@ public class BookDto {
     private Integer price;
     private Integer noOfPages;
     private Integer publishedYear;
-    private Librarian librarian;
 }
