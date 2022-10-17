@@ -4,6 +4,7 @@ import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -12,6 +13,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
+@EnableWebMvc
 public class SwaggerConfig {
     @Bean
     public Docket getDocket() {
@@ -29,7 +31,7 @@ public class SwaggerConfig {
                 "1.0", "strictly for study",
                 new Contact("Rakshith R", "https://github.com/Rakshi-72", "rakshithjoghalli@gmail.com"),
                 "under swagger API license",
-                "https://github.com/Rakshi-72",
+                "https://swagger.io/license/",
                 Collections.emptyList());
     }
 }
