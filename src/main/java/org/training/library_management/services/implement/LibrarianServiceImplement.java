@@ -65,7 +65,7 @@ public class LibrarianServiceImplement implements LibrarianService {
      */
     @Override
     public LibrarianDtoResponse getLibrarianById(Integer id) {
-        Librarian librarian = this.librarianRepo.findById(id).orElseThrow(() -> new LibrarianNotFoundException(id));
+        Librarian librarian = this.librarianRepo.findById(id).orElseThrow(() -> new LibrarianNotFoundException(id.toString()));
         return mapper.map(librarian, LibrarianDtoResponse.class);
     }
 
@@ -81,7 +81,7 @@ public class LibrarianServiceImplement implements LibrarianService {
      */
     @Override
     public LibrarianDtoResponse updateLibrarian(Integer id, LibrarianDtoRequest request) {
-        Librarian librarian = this.librarianRepo.findById(id).orElseThrow(() -> new LibrarianNotFoundException(id));
+        Librarian librarian = this.librarianRepo.findById(id).orElseThrow(() -> new LibrarianNotFoundException(id.toString()));
 
         librarian.setName(request.getName());
         librarian.setAge(request.getAge());
@@ -103,7 +103,7 @@ public class LibrarianServiceImplement implements LibrarianService {
         if (this.librarianRepo.existsById(id))
             this.librarianRepo.deleteById(id);
         else
-            throw new LibrarianNotFoundException(id);
+            throw new LibrarianNotFoundException(id.toString());
     }
 
     /**
@@ -120,7 +120,7 @@ public class LibrarianServiceImplement implements LibrarianService {
         Book book = bookRepo.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId));
 
         Librarian librarian = librarianRepo.findById(librarianId)
-                .orElseThrow(() -> new LibrarianNotFoundException(librarianId));
+                .orElseThrow(() -> new LibrarianNotFoundException(librarianId.toString()));
         if (book.getLibrarian() != null)
             throw new BookAlreadyBorrowedBySomeOneException(bookId);
         book.setLibrarian(librarian);
@@ -146,7 +146,7 @@ public class LibrarianServiceImplement implements LibrarianService {
     public BookDto returnBook(Integer librarianId, Integer bookId) {
         Book book = bookRepo.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId));
         Librarian librarian = librarianRepo.findById(librarianId)
-                .orElseThrow(() -> new LibrarianNotFoundException(librarianId));
+                .orElseThrow(() -> new LibrarianNotFoundException(librarianId.toString()));
 
         if (book.getLibrarian() == librarian) {
             book.setLibrarian(null);
@@ -166,7 +166,7 @@ public class LibrarianServiceImplement implements LibrarianService {
     @Override
     public List<BookDto> getBorrowedBooks(Integer librarianId) {
         Librarian librarian = librarianRepo.findById(librarianId)
-                .orElseThrow(() -> new LibrarianNotFoundException(librarianId));
+                .orElseThrow(() -> new LibrarianNotFoundException(librarianId.toString()));
 
         List<Book> books = bookRepo.findByLibrarian(librarian);
         if (books.isEmpty())
