@@ -13,7 +13,10 @@ import org.training.library_management.model.Book;
 import org.training.library_management.repositories.BookRepo;
 import org.training.library_management.services.BookService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class BookServiceImplement implements BookService {
 
     @Autowired
@@ -33,6 +36,7 @@ public class BookServiceImplement implements BookService {
     @Override
     public BookDto addBook(BookDto dto) {
         Book book = this.bookRepo.save(mapper.map(dto, Book.class));
+        log.info("adding book to library");
         return mapper.map(book, BookDto.class);
     }
 
@@ -46,7 +50,11 @@ public class BookServiceImplement implements BookService {
      */
     @Override
     public BookDto getBookById(Integer id) {
-        return mapper.map(this.bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException(id)), BookDto.class);
+        log.info(String.format("getting book from the library with the id %d", id));
+        return mapper.map(this.bookRepo.findById(id).orElseThrow(() -> {
+            log.error("there is no book with the id " + id);
+            return new BookNotFoundException(id);
+        }), BookDto.class);
     }
 
     /**
@@ -57,6 +65,7 @@ public class BookServiceImplement implements BookService {
      */
     @Override
     public List<BookDto> getAllBooks() {
+        log.info("getting all the books from the library");
         return this.bookRepo.findAll().stream().map(book -> mapper.map(book, BookDto.class))
                 .collect(Collectors.toList());
     }
@@ -73,12 +82,19 @@ public class BookServiceImplement implements BookService {
      */
     @Override
     public BookDto updateBook(Integer id, BookDto dto) {
-        Book book = this.bookRepo.findById(id).orElseThrow(() -> new BookNotFoundException(id));
+        Book book = this.bookRepo.findById(id).orElseThrow(() -> {
+            log.error("there is no book with the id " + id);
+            return new BookNotFoundException(id);
+        });
+
+        log.info("updating given book in the library");
         book.setName(dto.getName());
         book.setAuthor(dto.getAuthor());
         book.setNoOfPages(dto.getNoOfPages());
         book.setPrice(dto.getPrice());
         book.setPublishedYear(dto.getPublishedYear());
+
+        log.info("book updated successfully");
         return mapper.map(this.bookRepo.save(book), BookDto.class);
     }
 
@@ -89,10 +105,16 @@ public class BookServiceImplement implements BookService {
      */
     @Override
     public void deleteBook(Integer id) {
-        if (this.bookRepo.existsById(id))
+        if (this.bookRepo.existsById(id)) {
             this.bookRepo.deleteById(id);
-        else
+            log.info("book deleted successfully");
+        }
+
+        else {
+            log.error("there is no book with the given id to delete");
             throw new BookNotFoundException(id);
+        }
+
     }
 
     /**
@@ -107,10 +129,15 @@ public class BookServiceImplement implements BookService {
     public List<BookDto> searchBooksByKey(String key) {
         var listOfBooks = this.bookRepo.findByNameContaining(key).stream().map(e -> mapper.map(e, BookDto.class))
                 .toList();
-        if (!listOfBooks.isEmpty())
+        if (!listOfBooks.isEmpty()) {
+            log.info("books that contains " + key + " founded successfully");
             return listOfBooks;
-        else
+        }
+
+        else {
+            log.error("there is no book in the database that contain's " + key);
             throw new EmptyListException();
+        }
     }
 
     /**
@@ -123,12 +150,14 @@ public class BookServiceImplement implements BookService {
         List<Book> availableBooks = this.bookRepo.findAll()
                 .stream().filter(book -> book.getLibrarian() == null).toList();
 
-        if (availableBooks.isEmpty())
+        if (availableBooks.isEmpty()) {
+            log.error("there is no available books in the database");
             throw new EmptyListException();
+        }
 
         List<BookDto> books = availableBooks.stream()
                 .map(book -> mapper.map(book, BookDto.class)).toList();
-
+        log.info("books fetched successfully");
         return books;
     }
 

@@ -21,6 +21,9 @@ import org.training.library_management.repositories.BookRepo;
 import org.training.library_management.repositories.LibrarianRepo;
 import org.training.library_management.services.LibrarianService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class LibrarianServiceImplement implements LibrarianService {
 
@@ -46,6 +49,7 @@ public class LibrarianServiceImplement implements LibrarianService {
     public LibrarianDtoResponse createLibrarian(LibrarianDtoRequest request) {
         request.setPassword(encoder.encode(request.getPassword()));
         Librarian savedLibrarian = this.librarianRepo.save(mapper.map(request, Librarian.class));
+        log.info("librarian added successfully");
         return mapper.map(savedLibrarian, LibrarianDtoResponse.class);
     }
 
@@ -56,6 +60,7 @@ public class LibrarianServiceImplement implements LibrarianService {
      */
     @Override
     public List<LibrarianDtoResponse> getAllLibrarians() {
+        log.info("fetching all the librarians from the database");
         return this.librarianRepo.findAll().stream().map(librarian -> mapper.map(librarian, LibrarianDtoResponse.class))
                 .toList();
     }
@@ -71,7 +76,11 @@ public class LibrarianServiceImplement implements LibrarianService {
     @Override
     public LibrarianDtoResponse getLibrarianById(Integer id) {
         Librarian librarian = this.librarianRepo.findById(id)
-                .orElseThrow(() -> new LibrarianNotFoundException(id.toString()));
+                .orElseThrow(() -> {
+                    log.error("couldn't found any librarian with the id " + id);
+                    return new LibrarianNotFoundException(id.toString());
+                });
+        log.info("librarian has been fetched successfully");
         return mapper.map(librarian, LibrarianDtoResponse.class);
     }
 
@@ -88,8 +97,12 @@ public class LibrarianServiceImplement implements LibrarianService {
     @Override
     public LibrarianDtoResponse updateLibrarian(Integer id, LibrarianDtoRequest request) {
         Librarian librarian = this.librarianRepo.findById(id)
-                .orElseThrow(() -> new LibrarianNotFoundException(id.toString()));
+                .orElseThrow(() -> {
+                    log.info("couldn't found any librarian with the id " + id);
+                    return new LibrarianNotFoundException(id.toString());
+                });
 
+        log.info("updating librarian...");
         librarian.setName(request.getName());
         librarian.setAge(request.getAge());
         librarian.setEmail(request.getEmail());
@@ -97,6 +110,8 @@ public class LibrarianServiceImplement implements LibrarianService {
         librarian.setGender(request.getGender());
 
         Librarian savedLibrarian = this.librarianRepo.save(librarian);
+
+        log.info("librarian updated successfully");
         return mapper.map(savedLibrarian, LibrarianDtoResponse.class);
     }
 
@@ -107,10 +122,13 @@ public class LibrarianServiceImplement implements LibrarianService {
      */
     @Override
     public void deleteLibrarian(Integer id) {
-        if (this.librarianRepo.existsById(id))
+        if (this.librarianRepo.existsById(id)) {
+            log.info("librarian has been deleted from the database successfully");
             this.librarianRepo.deleteById(id);
-        else
+        } else {
+            log.info("couldn't found any librarian with the id " + id);
             throw new LibrarianNotFoundException(id.toString());
+        }
     }
 
     /**
@@ -124,18 +142,29 @@ public class LibrarianServiceImplement implements LibrarianService {
      */
     @Override
     public BookDtoSimple barrowBook(Integer librarianId, Integer bookId) {
-        Book book = bookRepo.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId));
-
+        Book book = bookRepo.findById(bookId).orElseThrow(() -> {
+            log.error("there is no book with the id " + bookId);
+            return new BookNotFoundException(bookId);
+        });
+        log.info("book found..!");
         Librarian librarian = librarianRepo.findById(librarianId)
-                .orElseThrow(() -> new LibrarianNotFoundException(librarianId.toString()));
-        if (book.getLibrarian() != null)
+                .orElseThrow(() -> {
+                    log.info("couldn't found any librarian with the id " + librarianId);
+                    return new LibrarianNotFoundException(librarianId.toString());
+                });
+
+        if (book.getLibrarian() != null) {
+            log.error("trying to borrow book has already been borrowed by someone else");
             throw new BookAlreadyBorrowedBySomeOneException(bookId);
+        }
         book.setLibrarian(librarian);
 
+        log.info("books has been issued");
         Book savedBook = bookRepo.save(book);
 
         BookDtoSimple mappedBookDto = mapper.map(savedBook, BookDtoSimple.class);
         mappedBookDto.setLibrarian(mapper.map(librarian, LibrarianDtoResponse.class));
+        log.info("returning book dto");
         return mappedBookDto;
     }
 
@@ -151,14 +180,22 @@ public class LibrarianServiceImplement implements LibrarianService {
      */
     @Override
     public BookDto returnBook(Integer librarianId, Integer bookId) {
-        Book book = bookRepo.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId));
+        Book book = bookRepo.findById(bookId).orElseThrow(() -> {
+            log.error("there is no book with the id " + bookId);
+            return new BookNotFoundException(bookId);
+        });
         Librarian librarian = librarianRepo.findById(librarianId)
-                .orElseThrow(() -> new LibrarianNotFoundException(librarianId.toString()));
+                .orElseThrow(() -> {
+                    log.info("couldn't found any librarian with the id " + librarianId);
+                    return new LibrarianNotFoundException(librarianId.toString());
+                });
 
         if (book.getLibrarian() == librarian) {
             book.setLibrarian(null);
             bookRepo.save(book);
+            log.info("book has been returned successfully");
         } else {
+            log.error("user is trying to return the book he doesn't have");
             throw new UserDoestHaveParticularBookException(bookId);
         }
         return mapper.map(book, BookDto.class);
@@ -173,12 +210,17 @@ public class LibrarianServiceImplement implements LibrarianService {
     @Override
     public List<BookDto> getBorrowedBooks(Integer librarianId) {
         Librarian librarian = librarianRepo.findById(librarianId)
-                .orElseThrow(() -> new LibrarianNotFoundException(librarianId.toString()));
+                .orElseThrow(() -> {
+                    log.info("couldn't found any librarian with the id " + librarianId);
+                    return new LibrarianNotFoundException(librarianId.toString());
+                });
 
         List<Book> books = bookRepo.findByLibrarian(librarian);
-        if (books.isEmpty())
+        if (books.isEmpty()) {
+            log.error("user haven't borrowed any books yet");
             throw new NoBookBorrowedYetException(librarianId);
-
+        }
+        log.info("books borrowed has been fetched");
         return books.stream().map(book -> mapper.map(book, BookDto.class)).toList();
     }
 }
