@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -124,6 +125,13 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NoBookBorrowedYetException.class)
     public ResponseEntity<Properties> handleBookBorrow(NoBookBorrowedYetException exception) {
+        Properties props = new Properties();
+        props.setProperty("message", exception.getMessage());
+        return new ResponseEntity<>(props, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Properties> handleUserNameNotFoundException(UsernameNotFoundException exception) {
         Properties props = new Properties();
         props.setProperty("message", exception.getMessage());
         return new ResponseEntity<>(props, HttpStatus.BAD_REQUEST);

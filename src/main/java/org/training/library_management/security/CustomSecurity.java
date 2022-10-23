@@ -6,20 +6,36 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.training.library_management.security.jwt.JWTAuthenticationEntryPoint;
+import org.training.library_management.security.jwt.JWTRequestFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableWebMvc
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
     @Autowired
     private CustomUserDetailsService service;
 
     @Autowired
+    private JWTAuthenticationEntryPoint entryPoint;
+
+    @Autowired
     private BCryptPasswordEncoder encoder;
+
+    @Autowired
+    private JWTRequestFilter filter;
+
+    private final String[] PATHS = { "/api/librarian/add", "/api/book/all", "/swagger-ui/index.html",
+            "/api/jwt/login" };
     /*
      * @Override
      * protected void configure(HttpSecurity http) throws Exception {
@@ -51,12 +67,18 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
         security.csrf().disable()
                 .cors().disable()
                 .authorizeRequests()
-                .antMatchers("/api/librarian/add", "/api/book/all", "/swagger-ui/index.html")
+                .antMatchers(PATHS)
                 .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
-                .httpBasic();
+                .exceptionHandling()
+                .authenticationEntryPoint(entryPoint)
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        security.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+
         security.authenticationProvider(getProvider());
         return security.build();
     }
