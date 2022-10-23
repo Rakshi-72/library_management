@@ -18,6 +18,8 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
     @Autowired
     private CustomUserDetailsService service;
 
+    @Autowired
+    private BCryptPasswordEncoder encoder;
     /*
      * @Override
      * protected void configure(HttpSecurity http) throws Exception {
@@ -36,25 +38,20 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
      * }
      */
 
-    @Bean
-    public PasswordEncoder getEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    /**
-     * If the request is to the /api/librarian/add or /api/book/all endpoints, allow
-     * it. Otherwise, require authentication.
-     *
-     * @param security This is the HttpSecurity object that is used to configure the
-     *                 security of the application.
-     * @return A SecurityFilterChain
+    /*
+     * allow only swagger ui, creating users and to know which books available in
+     * the library, rest endpoints should be authenticated
+     * 
+     * @param HttpSecurity
+     * 
+     * @return securityFilter chain with configuration
      */
     @Bean
     public SecurityFilterChain getFilterChain(HttpSecurity security) throws Exception {
         security.csrf().disable()
                 .cors().disable()
                 .authorizeRequests()
-                .antMatchers("/api/librarian/add", "/api/book/all")
+                .antMatchers("/api/librarian/add", "/api/book/all", "/swagger-ui/index.html")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -74,7 +71,7 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
     @Bean
     public DaoAuthenticationProvider getProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(getEncoder());
+        provider.setPasswordEncoder(encoder);
         provider.setUserDetailsService(service);
         return provider;
     }

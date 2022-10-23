@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.training.library_management.dtos.BookDto;
 import org.training.library_management.dtos.BookDtoSimple;
@@ -29,9 +30,12 @@ public class LibrarianServiceImplement implements LibrarianService {
     private BookRepo bookRepo;
     @Autowired
     private ModelMapper mapper;
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
     /**
-     * The function takes a LibrarianDtoRequest object, maps it to a Librarian
+     * The function takes a LibrarianDtoRequest object, encodes the password, maps
+     * it to a Librarian
      * object, saves it to the database, and then
      * maps it back to a LibrarianDtoResponse object
      *
@@ -40,6 +44,7 @@ public class LibrarianServiceImplement implements LibrarianService {
      */
     @Override
     public LibrarianDtoResponse createLibrarian(LibrarianDtoRequest request) {
+        request.setPassword(encoder.encode(request.getPassword()));
         Librarian savedLibrarian = this.librarianRepo.save(mapper.map(request, Librarian.class));
         return mapper.map(savedLibrarian, LibrarianDtoResponse.class);
     }
@@ -65,7 +70,8 @@ public class LibrarianServiceImplement implements LibrarianService {
      */
     @Override
     public LibrarianDtoResponse getLibrarianById(Integer id) {
-        Librarian librarian = this.librarianRepo.findById(id).orElseThrow(() -> new LibrarianNotFoundException(id.toString()));
+        Librarian librarian = this.librarianRepo.findById(id)
+                .orElseThrow(() -> new LibrarianNotFoundException(id.toString()));
         return mapper.map(librarian, LibrarianDtoResponse.class);
     }
 
@@ -81,12 +87,13 @@ public class LibrarianServiceImplement implements LibrarianService {
      */
     @Override
     public LibrarianDtoResponse updateLibrarian(Integer id, LibrarianDtoRequest request) {
-        Librarian librarian = this.librarianRepo.findById(id).orElseThrow(() -> new LibrarianNotFoundException(id.toString()));
+        Librarian librarian = this.librarianRepo.findById(id)
+                .orElseThrow(() -> new LibrarianNotFoundException(id.toString()));
 
         librarian.setName(request.getName());
         librarian.setAge(request.getAge());
         librarian.setEmail(request.getEmail());
-        librarian.setPassword(request.getPassword());
+        librarian.setPassword(encoder.encode(request.getPassword()));
         librarian.setGender(request.getGender());
 
         Librarian savedLibrarian = this.librarianRepo.save(librarian);
