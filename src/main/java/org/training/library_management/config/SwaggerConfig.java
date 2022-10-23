@@ -1,5 +1,6 @@
 package org.training.library_management.config;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -7,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import java.util.Arrays;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -24,6 +24,11 @@ import springfox.documentation.spring.web.plugins.Docket;
 public class SwaggerConfig {
     private static final AuthorizationScope[] SCOPES = { new AuthorizationScope("global", "accessEverything") };
 
+    /**
+     * It creates a Docket bean which is used by the swagger-spring-mvc framework to
+     * generate the
+     * swagger documentation.
+     */
     @Bean
     public Docket getDocket() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -31,10 +36,18 @@ public class SwaggerConfig {
                 .securitySchemes(Arrays.asList(getApiKey()))
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("org.training.library_management.controllers"))
+                .paths(PathSelectors.any())
                 .build()
                 .apiInfo(getInfo());
 
     }
+
+    /**
+     * It returns an object of type ApiInfo which contains the information about the
+     * API
+     * 
+     * @return the information about the API.
+     */
 
     private ApiInfo getInfo() {
         return new ApiInfo("Library management API",
@@ -46,6 +59,7 @@ public class SwaggerConfig {
                 Collections.emptyList());
     }
 
+    // Used to add the JWT token to the swagger documentation.
     private ApiKey getApiKey() {
         return new ApiKey("JWT", "Authorization", "header");
     }

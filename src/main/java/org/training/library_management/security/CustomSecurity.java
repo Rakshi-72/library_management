@@ -34,8 +34,8 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
     @Autowired
     private JWTRequestFilter filter;
 
-    private final String[] PATHS = { "/api/librarian/add", "/api/book/all", "/swagger-ui/index.html",
-            "/api/jwt/login" };
+    private final String[] PATHS = { "/api/librarian/add", "/api/book/all", "/swagger-ui/index.html", "/api/jwt/login",
+            "/v3/api-docs", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**", "/v2/api-docs" };
     /*
      * @Override
      * protected void configure(HttpSecurity http) throws Exception {
@@ -83,7 +83,7 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
         return security.build();
     }
 
-    /**
+    /*
      * The function returns a DaoAuthenticationProvider object, which is a class
      * that implements the AuthenticationProvider
      * interface
@@ -98,12 +98,13 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
         return provider;
     }
 
-    /**
-     * > This function is used to get the AuthenticationManager object from the
+    /*
+     * This function is used to get the AuthenticationManager object from the
      * AuthenticationConfiguration object
      *
      * @param config The AuthenticationConfiguration object that is used to
-     *               configure the AuthenticationManager.
+     * configure the AuthenticationManager.
+     * 
      * @return An AuthenticationManager
      */
     @Bean
