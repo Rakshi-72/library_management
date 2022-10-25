@@ -83,6 +83,8 @@ public class BookServiceImplement implements BookService {
         log.info("getting all the books from the library");
 
         List<BookDto> books = page.getContent().stream().map(book -> mapper.map(book, BookDto.class)).toList();
+        if (books.isEmpty())
+            throw new EmptyListException();
         return new BookResponse(books, page.getNumber(), page.getSize(), page.getNumberOfElements(),
                 page.getTotalPages(), page.isLast());
     }

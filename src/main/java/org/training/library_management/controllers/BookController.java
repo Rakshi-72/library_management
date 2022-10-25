@@ -71,7 +71,7 @@ public class BookController {
     public ResponseEntity<BookResponse> getAllBooks(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
-            @RequestParam(value = "sortBy", defaultValue = "postId", required = false) String sort,
+            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sort,
             @RequestParam(value = "sortDirection", defaultValue = "asc", required = false) String sortDirection) {
         return new ResponseEntity<>(this.service.getAllBooks(pageNumber, pageSize, sort, sortDirection), HttpStatus.OK);
     }
