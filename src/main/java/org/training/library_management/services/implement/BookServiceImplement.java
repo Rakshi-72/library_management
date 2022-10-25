@@ -5,6 +5,10 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.training.library_management.dtos.BookDto;
 import org.training.library_management.exceptions.BookNotFoundException;
@@ -58,16 +62,29 @@ public class BookServiceImplement implements BookService {
     }
 
     /**
-     * Get all books from the database, convert them to BookDto objects, and return
-     * them as a list.
+     * This function returns a list of books from the database, with the ability to
+     * sort, filter, and
+     * paginate the results.
      * 
-     * @return A list of BookDto objects.
+     * @param pageNumber    The page number to be returned.
+     * @param pageSize      The number of items to be displayed on a page.
+     * @param sortBy        The field to sort by.
+     * @param sortDirection asc or desc
+     * @return A BookResponse object
      */
     @Override
-    public List<BookDto> getAllBooks() {
+    public BookResponse getAllBooks(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection) {
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize,
+                sortDirection.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending());
+
+        Page<Book> page = this.bookRepo.findAll(pageable);
+
         log.info("getting all the books from the library");
-        return this.bookRepo.findAll().stream().map(book -> mapper.map(book, BookDto.class))
-                .collect(Collectors.toList());
+
+        List<BookDto> books = page.getContent().stream().map(book -> mapper.map(book, BookDto.class)).toList();
+        return new BookResponse(books, page.getNumber(), page.getSize(), page.getNumberOfElements(),
+                page.getTotalPages(), page.isLast());
     }
 
     /**

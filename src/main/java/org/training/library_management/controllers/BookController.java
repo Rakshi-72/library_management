@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.training.library_management.config.ApiResponse;
 import org.training.library_management.dtos.BookDto;
 import org.training.library_management.services.BookService;
+import org.training.library_management.services.implement.BookResponse;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -59,12 +60,20 @@ public class BookController {
     /**
      * This function returns a list of all books in the database
      * 
-     * @return A list of BookDto objects
+     * @param pageNumber    The page number to return.
+     * @param pageSize      The number of items to be returned in a page.
+     * @param sort          the field to sort by
+     * @param sortDirection asc or desc
+     * @return A list of books
      */
     @GetMapping("/all")
     @ApiOperation(value = "return all books", notes = "This function returns a list of all books in the database")
-    public ResponseEntity<List<BookDto>> getAllBooks() {
-        return new ResponseEntity<>(this.service.getAllBooks(), HttpStatus.OK);
+    public ResponseEntity<BookResponse> getAllBooks(
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "postId", required = false) String sort,
+            @RequestParam(value = "sortDirection", defaultValue = "asc", required = false) String sortDirection) {
+        return new ResponseEntity<>(this.service.getAllBooks(pageNumber, pageSize, sort, sortDirection), HttpStatus.OK);
     }
 
     /**

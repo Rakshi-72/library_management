@@ -34,7 +34,7 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
     @Autowired
     private JWTRequestFilter filter;
 
-    private final String[] PATHS = { "/api/librarian/add", "/api/book/all", "/swagger-ui/index.html", "/api/jwt/login",
+    private final String[] PATHS = { "/api/librarian/add", "/api/book/all", "/api/jwt/login",
             "/v3/api-docs", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**", "/v2/api-docs" };
     /*
      * @Override
@@ -77,6 +77,7 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         security.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
 
         security.authenticationProvider(getProvider());
