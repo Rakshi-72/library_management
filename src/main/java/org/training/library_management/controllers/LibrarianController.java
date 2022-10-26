@@ -139,4 +139,17 @@ public class LibrarianController {
         return new ResponseEntity<>(this.service.getBorrowedBooks(librarianId), HttpStatus.OK);
     }
 
+    /**
+     * It returns a list of books back to the library that have been borrowed by a
+     * librarian
+     * 
+     * @param librarianId the id of the librarian who is returning the books
+     * @return A list of books that have been returned.
+     */
+    @GetMapping("/{librarianId}/return/all")
+    @ApiOperation(value = "return all the books borrowed", notes = "It returns a list of books back to the library that have been borrowed by a librarian", response = BookDtoSimple.class)
+    public ResponseEntity<List<BookDto>> returnAllBorrowedBooks(@PathVariable Integer librarianId) {
+        return new ResponseEntity<>(this.service.returnAllBooks(librarianId), HttpStatus.OK);
+    }
+
 }

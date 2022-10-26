@@ -116,9 +116,10 @@ public class LibrarianServiceImplement implements LibrarianService {
     }
 
     /**
-     * If the librarian exists, delete it
-     *
-     * @param id The id of the librarian to be deleted.
+     * It deletes a librarian from the database if it exists, otherwise it throws an
+     * exception
+     * 
+     * @param id the id of the librarian to be deleted
      */
     @Override
     public void deleteLibrarian(Integer id) {
@@ -134,11 +135,14 @@ public class LibrarianServiceImplement implements LibrarianService {
     /**
      * It takes a bookId and a librarianId, finds the book and the librarian, checks
      * if the book is
-     * already borrowed, if not, it sets the librarian to the book and saves it
+     * already borrowed by someone else, if not, it sets the librarian to the book
+     * and saves it, then it
+     * maps the book to a bookDto and returns it
      * 
-     * @param librarianId 1
+     * @param librarianId the id of the librarian who is borrowing the book
      * @param bookId      1
-     * @return BookDtoSimple mappedBookDto
+     * @return BookDtoSimple mappedBookDto = mapper.map(savedBook,
+     *         BookDtoSimple.class);
      */
     @Override
     public BookDtoSimple barrowBook(Integer librarianId, Integer bookId) {
@@ -223,4 +227,30 @@ public class LibrarianServiceImplement implements LibrarianService {
         log.info("books borrowed has been fetched");
         return books.stream().map(book -> mapper.map(book, BookDto.class)).toList();
     }
+
+    /**
+     * "I want to return all the books that a librarian has borrowed, so I get all
+     * the books that the
+     * librarian has borrowed, then I set the
+     * librarian to null, then I
+     * save the new list, then I map the new list to a new list of dto and return
+     * it."
+     * 
+     * I'm not sure if this is the best way to do it, but it works
+     * 
+     * @param librarianId the id of the librarian who is returning the books
+     * @return A list of BookDtoSimple objects.
+     */
+    @Override
+    public List<BookDto> returnAllBooks(Integer librarianId) {
+        List<Book> borrowedBooks = this.getBorrowedBooks(librarianId).stream()
+                .map(book -> this.mapper.map(book, Book.class)).toList();
+
+        borrowedBooks.forEach(book -> book.setLibrarian(null));
+
+        this.bookRepo.saveAll(borrowedBooks);
+        log.warn("returning all the books");
+        return borrowedBooks.stream().map(book -> this.mapper.map(book, BookDto.class)).toList();
+    }
+
 }

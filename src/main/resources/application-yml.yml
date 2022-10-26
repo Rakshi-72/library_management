@@ -1,0 +1,28 @@
+spring:
+  profiles:
+    active: mysql
+  datasource:
+    url: jdbc:h2:file:D:/library
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+      path: /api/h2
+
+server:
+  port: 8081
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+jwt:
+  key: secret

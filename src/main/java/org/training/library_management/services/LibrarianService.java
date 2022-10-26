@@ -24,4 +24,6 @@ public interface LibrarianService {
 
     List<BookDto> getBorrowedBooks(Integer librarianId);
 
+    List<BookDto> returnAllBooks(Integer librarianId);
+
 }
