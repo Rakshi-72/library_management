@@ -3,7 +3,7 @@ package org.training.library_management.services;
 import java.util.List;
 
 import org.training.library_management.dtos.BookDto;
-import org.training.library_management.services.implement.BookResponse;
+import org.training.library_management.dtos.BookResponse;
 
 public interface BookService {
     BookDto addBook(BookDto dto);

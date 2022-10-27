@@ -1,8 +1,17 @@
 package org.training.library_management.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -19,6 +28,6 @@ public class Book {
     private Integer price;
     private Integer noOfPages;
     private Integer publishedYear;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Librarian librarian;
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.training.library_management.config.ApiResponse;
+import org.training.library_management.dtos.ApiWithHeaderResponse;
 import org.training.library_management.dtos.BookDto;
 import org.training.library_management.dtos.BookDtoSimple;
 import org.training.library_management.dtos.LibrarianDtoRequest;
@@ -34,13 +37,23 @@ public class LibrarianController {
      * It takes a LibrarianDtoRequest object, validates it, and then passes it to
      * the service layer
      * 
-     * @param request the request body
-     * @return A ResponseEntity object is being returned.
+     * @param request The request object that is passed to the controller.
+     * @param builder This is a UriComponentsBuilder object that is used to build
+     *                the URI of the newly
+     *                created resource.
+     * @return A ResponseEntity object with a LibrarianDtoResponse object and a
+     *         HttpStatus.CREATED
+     *         status.
      */
     @PostMapping("/add")
     @ApiOperation(value = "create a Librarian", notes = "It takes a LibrarianDtoRequest object, validates it, and then passes it to the service layer", response = LibrarianDtoResponse.class)
-    public ResponseEntity<LibrarianDtoResponse> addLibrarian(@Valid @RequestBody LibrarianDtoRequest request) {
-        return new ResponseEntity<>(service.createLibrarian(request), HttpStatus.CREATED);
+    public ResponseEntity<ApiWithHeaderResponse<LibrarianDtoResponse>> addLibrarian(
+            @Valid @RequestBody LibrarianDtoRequest request,
+            UriComponentsBuilder builder) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(builder.path("/api/librarian/add").buildAndExpand().toUri());
+        return new ResponseEntity<>(new ApiWithHeaderResponse<>(service.createLibrarian(request), headers),
+                HttpStatus.CREATED);
     }
 
     /**

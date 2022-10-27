@@ -1,8 +1,6 @@
-package org.training.library_management.services.implement;
+package org.training.library_management.dtos;
 
 import java.util.List;
-
-import org.training.library_management.dtos.BookDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.training.library_management.config.ApiResponse;
 import org.training.library_management.dtos.BookDto;
+import org.training.library_management.dtos.BookResponse;
 import org.training.library_management.services.BookService;
-import org.training.library_management.services.implement.BookResponse;
 
 import io.swagger.annotations.ApiOperation;
 

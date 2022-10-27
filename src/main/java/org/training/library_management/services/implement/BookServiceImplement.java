@@ -1,7 +1,6 @@
 package org.training.library_management.services.implement;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.training.library_management.dtos.BookDto;
+import org.training.library_management.dtos.BookResponse;
 import org.training.library_management.exceptions.BookNotFoundException;
 import org.training.library_management.exceptions.EmptyListException;
 import org.training.library_management.model.Book;
