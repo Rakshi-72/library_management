@@ -1,6 +1,7 @@
 package org.training.library_management.services.implement;
 
 import java.util.List;
+import java.util.Set;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -219,13 +220,18 @@ public class LibrarianServiceImplement implements LibrarianService {
                     return new LibrarianNotFoundException(librarianId.toString());
                 });
 
-        List<Book> books = bookRepo.findByLibrarian(librarian);
-        if (books.isEmpty()) {
+        // List<Book> books = bookRepo.findByLibrarian(librarian);
+        // if (books.isEmpty()) {
+        // log.error("user haven't borrowed any books yet");
+        // throw new NoBookBorrowedYetException(librarianId);
+        // }
+        Set<Book> booksBorrowed = librarian.getBooksBorrowed();
+        if (booksBorrowed.isEmpty()) {
             log.error("user haven't borrowed any books yet");
             throw new NoBookBorrowedYetException(librarianId);
         }
-        log.info("books borrowed has been fetched");
-        return books.stream().map(book -> mapper.map(book, BookDto.class)).toList();
+
+        return booksBorrowed.stream().map(book -> this.mapper.map(book, BookDto.class)).toList();
     }
 
     /**

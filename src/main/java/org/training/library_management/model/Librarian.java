@@ -14,14 +14,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@ToString
 public class Librarian {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
