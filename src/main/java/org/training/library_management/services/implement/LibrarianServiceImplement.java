@@ -1,8 +1,6 @@
 package org.training.library_management.services.implement;
 
-import java.util.List;
-import java.util.Set;
-
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,18 +9,14 @@ import org.training.library_management.dtos.BookDto;
 import org.training.library_management.dtos.BookDtoSimple;
 import org.training.library_management.dtos.LibrarianDtoRequest;
 import org.training.library_management.dtos.LibrarianDtoResponse;
-import org.training.library_management.exceptions.BookAlreadyBorrowedBySomeOneException;
-import org.training.library_management.exceptions.BookNotFoundException;
-import org.training.library_management.exceptions.LibrarianNotFoundException;
-import org.training.library_management.exceptions.NoBookBorrowedYetException;
-import org.training.library_management.exceptions.UserDoestHaveParticularBookException;
+import org.training.library_management.exceptions.*;
 import org.training.library_management.model.Book;
 import org.training.library_management.model.Librarian;
 import org.training.library_management.repositories.BookRepo;
 import org.training.library_management.repositories.LibrarianRepo;
 import org.training.library_management.services.LibrarianService;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -119,7 +113,7 @@ public class LibrarianServiceImplement implements LibrarianService {
     /**
      * It deletes a librarian from the database if it exists, otherwise it throws an
      * exception
-     * 
+     *
      * @param id the id of the librarian to be deleted
      */
     @Override
@@ -139,11 +133,11 @@ public class LibrarianServiceImplement implements LibrarianService {
      * already borrowed by someone else, if not, it sets the librarian to the book
      * and saves it, then it
      * maps the book to a bookDto and returns it
-     * 
+     *
      * @param librarianId the id of the librarian who is borrowing the book
      * @param bookId      1
      * @return BookDtoSimple mappedBookDto = mapper.map(savedBook,
-     *         BookDtoSimple.class);
+     * BookDtoSimple.class);
      */
     @Override
     public BookDtoSimple barrowBook(Integer librarianId, Integer bookId) {
@@ -168,7 +162,6 @@ public class LibrarianServiceImplement implements LibrarianService {
         Book savedBook = bookRepo.save(book);
 
         BookDtoSimple mappedBookDto = mapper.map(savedBook, BookDtoSimple.class);
-        mappedBookDto.setLibrarian(mapper.map(librarian, LibrarianDtoResponse.class));
         log.info("returning book dto");
         return mappedBookDto;
     }
@@ -176,9 +169,9 @@ public class LibrarianServiceImplement implements LibrarianService {
     /**
      * "If the book is assigned to the librarian, then unassign it, otherwise throw
      * an exception."
-     * 
+     * <p>
      * The above function is a good example of a function that is hard to test
-     * 
+     *
      * @param librarianId
      * @param bookId
      * @return BookDto
@@ -208,7 +201,7 @@ public class LibrarianServiceImplement implements LibrarianService {
 
     /**
      * It returns a list of books borrowed by a librarian
-     * 
+     *
      * @param librarianId Integer
      * @return A list of BookDto objects.
      */
@@ -225,7 +218,7 @@ public class LibrarianServiceImplement implements LibrarianService {
         // log.error("user haven't borrowed any books yet");
         // throw new NoBookBorrowedYetException(librarianId);
         // }
-        Set<Book> booksBorrowed = librarian.getBooksBorrowed();
+        List<Book> booksBorrowed = librarian.getBooksBorrowed();
         if (booksBorrowed.isEmpty()) {
             log.error("user haven't borrowed any books yet");
             throw new NoBookBorrowedYetException(librarianId);
@@ -241,9 +234,9 @@ public class LibrarianServiceImplement implements LibrarianService {
      * librarian to null, then I
      * save the new list, then I map the new list to a new list of dto and return
      * it."
-     * 
+     * <p>
      * I'm not sure if this is the best way to do it, but it works
-     * 
+     *
      * @param librarianId the id of the librarian who is returning the books
      * @return A list of BookDtoSimple objects.
      */

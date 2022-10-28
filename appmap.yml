@@ -1,7 +1,0 @@
-name: library_management
-packages:
-  - path: org.training.library_management
-test_recording:
-  test_commands:
-    - command: mvn test
-      env: {}

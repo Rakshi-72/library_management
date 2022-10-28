@@ -16,5 +16,4 @@ public class BookDtoSimple {
     private Integer price;
     private Integer noOfPages;
     private Integer publishedYear;
-    private LibrarianDtoResponse librarian;
 }

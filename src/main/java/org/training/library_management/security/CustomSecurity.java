@@ -35,7 +35,8 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
     private JWTRequestFilter filter;
 
     private final String[] PATHS = { "/api/librarian/add", "/api/book/all", "/api/jwt/login",
-            "/v3/api-docs", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**", "/v2/api-docs" };
+            "/v3/api-docs", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**", "/v2/api-docs",
+            "/api/hateos/**" };
     /*
      * @Override
      * protected void configure(HttpSecurity http) throws Exception {
