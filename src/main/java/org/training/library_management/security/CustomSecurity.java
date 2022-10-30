@@ -34,21 +34,20 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
     @Autowired
     private JWTRequestFilter filter;
 
-    private final String[] PATHS = { "/api/librarian/add", "/api/book/all", "/api/jwt/login",
-            "/v3/api-docs", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**", "/v2/api-docs",
-            "/api/hateos/**" };
+    private final String[] PATHS = {"/api/librarian/add", "/api/book/all", "/api/jwt/login",
+            "/v3/api-docs", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**", "/v2/api-docs"};
     /*
      * @Override
      * protected void configure(HttpSecurity http) throws Exception {
      * http
      * .authorizeRequests().anyRequest().authenticated().and().httpBasic();
      * }
-     * 
+     *
      * protected void configure(AuthenticationManagerBuilder auth) throws Exception
      * {
      * auth.userDetailsService(service).passwordEncoder(getEncoder());
      * }
-     * 
+     *
      * @Bean
      * public AuthenticationManager authenticationManagerBean() throws Exception {
      * return super.authenticationManagerBean();
@@ -58,9 +57,9 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
     /*
      * allow only swagger ui, creating users and to know which books available in
      * the library, rest endpoints should be authenticated
-     * 
+     *
      * @param HttpSecurity
-     * 
+     *
      * @return securityFilter chain with configuration
      */
     @Bean
@@ -68,10 +67,11 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
         security.csrf().disable()
                 .cors().disable()
                 .authorizeRequests()
-                .antMatchers(PATHS)
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+//                .antMatchers(PATHS)
+//                .permitAll()
+//                .anyRequest()
+//                .authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(entryPoint)
@@ -106,7 +106,7 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
      *
      * @param config The AuthenticationConfiguration object that is used to
      * configure the AuthenticationManager.
-     * 
+     *
      * @return An AuthenticationManager
      */
     @Bean

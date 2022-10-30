@@ -1,19 +1,20 @@
 package org.training.library_management.dtos;
 
-import java.util.List;
-
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.RepresentationModel;
-
+import com.fasterxml.jackson.annotation.JsonFilter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.RepresentationModel;
+
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonFilter("filter")
 public class LibrarianDtoResponse extends RepresentationModel<LibrarianDtoResponse> {
     private Integer id;
     private String name;
