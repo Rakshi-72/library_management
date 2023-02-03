@@ -1,5 +1,6 @@
 package org.training.library_management.services.implement;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -40,6 +41,7 @@ public class BookServiceImplement implements BookService {
     @Override
     public BookDto addBook(BookDto dto) {
         Book book = this.bookRepo.save(mapper.map(dto, Book.class));
+        book.setDate_of_borrowed(LocalDate.now());
         log.info("adding book to library");
         return mapper.map(book, BookDto.class);
     }

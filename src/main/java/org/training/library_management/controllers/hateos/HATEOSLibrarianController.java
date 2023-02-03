@@ -38,7 +38,7 @@ public class HATEOSLibrarianController {
         List<LibrarianDtoResponse> librarians = service.getAllLibrarians();
         librarians.stream().forEach(librarian -> {
 
-            Link selfLink = linkTo(this.getClass()).slash(librarian.getId()).withSelfRel();
+            Link selfLink = linkTo(this.getClass()).slash("users").slash(librarian.getId()).withSelfRel();
             librarian.add(selfLink);
 
             if (!librarian.getBooksBorrowed().isEmpty()) {

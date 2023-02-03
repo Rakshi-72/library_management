@@ -34,8 +34,8 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
     @Autowired
     private JWTRequestFilter filter;
 
-    private final String[] PATHS = {"/api/librarian/add", "/api/book/all", "/api/jwt/login",
-            "/v3/api-docs", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**", "/v2/api-docs"};
+    private final String[] PATHS = { "/api/librarian/add", "/api/book/all", "/api/jwt/login",
+            "/v3/api-docs", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**", "/v2/api-docs" };
     /*
      * @Override
      * protected void configure(HttpSecurity http) throws Exception {
@@ -67,11 +67,10 @@ public class CustomSecurity /* extends WebSecurityConfigurerAdapter */ {
         security.csrf().disable()
                 .cors().disable()
                 .authorizeRequests()
-//                .antMatchers(PATHS)
-//                .permitAll()
-//                .anyRequest()
-//                .authenticated()
-                .anyRequest().permitAll()
+                .antMatchers(PATHS)
+                .permitAll()
+                .anyRequest()
+                .authenticated()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(entryPoint)

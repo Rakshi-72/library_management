@@ -51,8 +51,9 @@ public class LibrarianController {
             @Valid @RequestBody LibrarianDtoRequest request,
             UriComponentsBuilder builder) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/api/librarian/add").buildAndExpand().toUri());
-        return new ResponseEntity<>(new ApiWithHeaderResponse<>(service.createLibrarian(request), headers),
+        LibrarianDtoResponse savedUser = service.createLibrarian(request);
+        headers.setLocation(builder.path("/api/librarian/" + savedUser.getId()).buildAndExpand().toUri());
+        return new ResponseEntity<>(new ApiWithHeaderResponse<>(savedUser, headers),
                 HttpStatus.CREATED);
     }
 
